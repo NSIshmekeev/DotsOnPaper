@@ -4,9 +4,28 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DotsOnPaper"
+        xmlns:vm="clr-namespace:DotsOnPaper.ViewModels"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        Title="Точки на бумаге" Height="900" Width="900">
+    <Window.DataContext>
+        <vm:MainViewModel />
+    </Window.DataContext>
 
-    </Grid>
+    <Canvas Background="White" Margin="20" Width="{Binding CanvasWidth, Mode=TwoWay}"
+                    Height="{Binding CanvasHeight, Mode=TwoWay}">
+        <ItemsControl ItemsSource="{Binding Lines}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <Canvas />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Line X1="{Binding X1}" Y1="{Binding Y1}"
+                      X2="{Binding X2}" Y2="{Binding Y2}"
+                      Stroke="LightGray" StrokeThickness="1" />
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </Canvas>
 </Window>
