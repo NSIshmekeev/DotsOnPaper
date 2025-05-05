@@ -1,4 +1,6 @@
-﻿using System.Text;
+﻿using DotsOnPaper.Models;
+using DotsOnPaper.ViewModels;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -11,14 +13,22 @@ using System.Windows.Shapes;
 
 namespace DotsOnPaper
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         public MainWindow()
         {
             InitializeComponent();
+
+        }
+
+        private void Canvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            var pos = e.GetPosition(GridCanvas);
+
+            if (DataContext is MainViewModel vm && vm.CanvasClickCommand.CanExecute(null))
+            {
+                vm.CanvasClickCommand.Execute(pos);
+            }
         }
     }
 }

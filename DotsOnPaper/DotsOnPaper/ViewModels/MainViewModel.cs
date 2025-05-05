@@ -1,55 +1,28 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Windows;
+using System.Windows.Input;
 using System.Windows.Shapes;
+using DotsOnPaper.Commands;
 using DotsOnPaper.Models;
 namespace DotsOnPaper.ViewModels
 {
-    public class MainViewModel : INotifyPropertyChanged
+    public class MainViewModel
     {
-        public ObservableCollection<LineModel> Lines { get; } = new();
+        public ICommand CanvasClickCommand { get; }
+        public ObservableCollection<LineModel> Lines { get;  } = new ObservableCollection<LineModel>();
+        public ObservableCollection<PointModel> PointsModel { get; } = new ObservableCollection<PointModel>();
 
-        private double _canvasWidth = 600;
-        public double CanvasWidth
-        {
-            get => _canvasWidth;
-            set
-            {
-                if (_canvasWidth != value)
-                {
-                    _canvasWidth = value;
-                    OnPropertyChanged(nameof(CanvasWidth));
-                    GenerateGrid();
-                }
-            }
-        }
-
-        private double _canvasHeight = 600;
-        public double CanvasHeight
-        {
-            get => _canvasHeight;
-            set
-            {
-                if (_canvasHeight != value)
-                {
-                    _canvasHeight = value;
-                    OnPropertyChanged(nameof(CanvasHeight));
-                    GenerateGrid();
-                }
-            }
-        }
 
         private const double CellSize = 50;
+        private const double CanvasWidth = 800;
+        private const double CanvasHeight = 800;
 
         public MainViewModel()
         {
-            GenerateGrid();
-        }
+            CanvasClickCommand = new RelayCommand(OnCanvasClick);
 
-        private void GenerateGrid()
-        {
-            Lines.Clear();
-
-            for (double x = 0; x <= CanvasWidth; x += CellSize)
+            for (double x = 0; x <= CanvasWidth; x+=CellSize)
             {
                 Lines.Add(new LineModel { X1 = x, Y1 = 0, X2 = x, Y2 = CanvasHeight });
             }
@@ -60,8 +33,19 @@ namespace DotsOnPaper.ViewModels
             }
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected void OnPropertyChanged(string propName) =>
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
+        private void OnCanvasClick(object? parameter)
+        {
+            if (parameter is Point clickPosition)
+            {
+                double snappedX = Math.Round(clickPosition.X / CellSize) * CellSize;
+                double snappedY = Math.Round(clickPosition.Y / CellSize) * CellSize;
+
+                if (snappedX < 0 || snappedX > CanvasWidth || snappedY < 0 || snappedY > CanvasHeight)
+                {
+                    return;
+                }
+                PointsModel.Add(new PointModel { X = snappedX, Y = snappedY });
+            }
+        }
     }
 }

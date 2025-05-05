@@ -5,14 +5,21 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DotsOnPaper"
         xmlns:vm="clr-namespace:DotsOnPaper.ViewModels"
+        xmlns:conv="clr-namespace:DotsOnPaper.Converters"
         mc:Ignorable="d"
         Title="Точки на бумаге" Height="900" Width="900">
+    <Window.Resources>
+        <conv:CenterShiftConverter x:Key="CenterShiftConverter" />
+        <Style TargetType="ContentPresenter">
+            <Setter Property="Canvas.Left" Value="{Binding X, Converter={StaticResource CenterShiftConverter}}" />
+            <Setter Property="Canvas.Top" Value="{Binding Y, Converter={StaticResource CenterShiftConverter}}" />
+            </Style>
+        </Window.Resources>
     <Window.DataContext>
         <vm:MainViewModel />
     </Window.DataContext>
 
-    <Canvas Background="White" Margin="20" Width="{Binding CanvasWidth, Mode=TwoWay}"
-                    Height="{Binding CanvasHeight, Mode=TwoWay}">
+    <Canvas Name="GridCanvas" Background="White" Margin="20" Height="800" Width="800" MouseLeftButtonDown="Canvas_MouseLeftButtonDown">
         <ItemsControl ItemsSource="{Binding Lines}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
@@ -24,6 +31,21 @@
                     <Line X1="{Binding X1}" Y1="{Binding Y1}"
                       X2="{Binding X2}" Y2="{Binding Y2}"
                       Stroke="LightGray" StrokeThickness="1" />
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
+        <ItemsControl ItemsSource="{Binding PointsModel}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <Canvas Width="{Binding ActualWidth, ElementName=GridCanvas}"
+                        Height="{Binding ActualHeight, ElementName=GridCanvas}" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Ellipse Width="16" Height="16" Fill="Red"/>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
