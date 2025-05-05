@@ -7,39 +7,10 @@ using System.Threading.Tasks;
 
 namespace DotsOnPaper.Models
 {
-    public class PointModel : INotifyPropertyChanged
+    public class PointModel
     {
-        private double _x;
-        public double X
-        {
-            get => _x;
-            set
-            {
-                if (_x != value)
-                {
-                    _x = value;
-                    OnPropertyChanged(nameof(X));
-                }
-            }
-        }
-
-        private double _y;
-        public double Y
-        {
-            get => _y;
-            set
-            {
-                if (_y != value)
-                {
-                    _y = value;
-                    OnPropertyChanged(nameof(Y));
-                }
-            }
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected void OnPropertyChanged(string name) =>
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        public double X { get; set; }
+        public double Y { get; set; }
     }
 
 }
