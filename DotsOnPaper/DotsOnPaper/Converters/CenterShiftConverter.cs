@@ -10,7 +10,7 @@ namespace DotsOnPaper.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return (double)value - 8;
+            return (double)value - 12;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

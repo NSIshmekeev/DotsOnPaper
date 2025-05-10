@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:DotsOnPaper"
         xmlns:vm="clr-namespace:DotsOnPaper.ViewModels"
         xmlns:conv="clr-namespace:DotsOnPaper.Converters"
+        xmlns:models="clr-namespace:DotsOnPaper.Models"
         mc:Ignorable="d"
         Title="Точки на бумаге" Height="900" Width="900">
     <Window.Resources>
@@ -18,36 +19,72 @@
     <Window.DataContext>
         <vm:MainViewModel />
     </Window.DataContext>
-
-    <Canvas Name="GridCanvas" Background="White" Margin="20" Height="800" Width="800" MouseLeftButtonDown="Canvas_MouseLeftButtonDown">
-        <ItemsControl ItemsSource="{Binding Lines}">
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <Canvas />
-                </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <Line X1="{Binding X1}" Y1="{Binding Y1}"
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <!-- Панель сверху -->
+            <RowDefinition Height="*" />
+            <!-- Canvas занимает всё оставшееся -->
+        </Grid.RowDefinitions>
+        <Canvas Grid.Row="1" Name="GridCanvas" Background="White" Margin="20" Height="800" Width="800" MouseLeftButtonDown="Canvas_MouseLeftButtonDown">
+            <ItemsControl ItemsSource="{Binding Lines}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <Canvas />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Line X1="{Binding X1}" Y1="{Binding Y1}"
                       X2="{Binding X2}" Y2="{Binding Y2}"
                       Stroke="LightGray" StrokeThickness="1" />
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
 
-        <ItemsControl ItemsSource="{Binding PointsModel}">
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <Canvas Width="{Binding ActualWidth, ElementName=GridCanvas}"
+            <ItemsControl ItemsSource="{Binding PointsModelR}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <Canvas Width="{Binding ActualWidth, ElementName=GridCanvas}"
                         Height="{Binding ActualHeight, ElementName=GridCanvas}" />
-                </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-            
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <Ellipse Width="16" Height="16" Fill="Red"/>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
-    </Canvas>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Ellipse Width="24" Height="24" Fill="Red"/>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            <ItemsControl ItemsSource="{Binding PointsModelB}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <Canvas Width="{Binding ActualWidth, ElementName=GridCanvas}"
+                Height="{Binding ActualHeight, ElementName=GridCanvas}" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Ellipse Width="24" Height="24" Fill="Blue"/>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </Canvas>
+        <StackPanel HorizontalAlignment="Center" Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,10">
+            <TextBlock Text="Текущий ход: " VerticalAlignment="Center"/>
+            <TextBlock VerticalAlignment="Center">
+                <TextBlock.Style>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="Text" Value="Игрок 1 (Красные)"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding CurrentPlayer}" Value="{x:Static models:Player.Player2}">
+                                <Setter Property="Text" Value="Игрок 2 (Синие)"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+        </StackPanel>
+    </Grid>
 </Window>
